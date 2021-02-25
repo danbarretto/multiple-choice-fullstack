@@ -33,6 +33,9 @@ class ExerciseUpdateInput {
 export class ExerciseResolver {
     @Mutation(() => Exercise)
     async createExercise(@Arg('input') input: ExerciseInput) {
+        if (input.correctOption >= input.options.length) {
+            return new Error('correctOption must be a valid index')
+        }
         const exercise = await Exercise.create(input).save()
         return exercise
     }
@@ -43,18 +46,29 @@ export class ExerciseResolver {
         @Arg('input') input: ExerciseUpdateInput) {
 
         const exerciseRepo = getMongoRepository(Exercise)
-        const exercise = await exerciseRepo.findOneAndUpdate({ _id: new ObjectId(_id) }, {
-            $set: {...input}
-        }, {returnOriginal:false})
+        const exercise = await exerciseRepo.findOne(_id)
 
-        return exercise.value
+        if (input.correctOption && input.options && input.correctOption >= input.options.length
+            || (!input.options && input.correctOption && exercise && input.correctOption >= exercise.options.length)) {
+            return new Error('correctOption must be a valid index')
+        }
+
+        if (exercise) {
+
+            await exerciseRepo.updateOne(exercise, {
+                $set: { ...input }
+            })
+            await exercise.reload()
+            return exercise
+        }
+        return new Error('Could not find exercise')
     }
 
-    @Mutation(()=>Boolean)
-    async deleteExercise(@Arg('id') _id:string){
+    @Mutation(() => Boolean)
+    async deleteExercise(@Arg('id') _id: string) {
         const exerciseRepo = getMongoRepository(Exercise)
         try {
-            await exerciseRepo.findOneAndDelete({_id:new ObjectId(_id)})
+            await exerciseRepo.findOneAndDelete({ _id: new ObjectId(_id) })
         } catch (error) {
             console.error(error)
             return false
