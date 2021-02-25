@@ -47,9 +47,19 @@ export class ExerciseResolver {
             $set: {...input}
         }, {returnOriginal:false})
 
-        
-
         return exercise.value
+    }
+
+    @Mutation(()=>Boolean)
+    async deleteExercise(@Arg('id') _id:string){
+        const exerciseRepo = getMongoRepository(Exercise)
+        try {
+            await exerciseRepo.findOneAndDelete({_id:new ObjectId(_id)})
+        } catch (error) {
+            console.error(error)
+            return false
+        }
+        return true
     }
 
     @Query(() => [Exercise])
