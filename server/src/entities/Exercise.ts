@@ -1,15 +1,23 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Option } from './Option'
-
+import { Field, Int, ObjectType } from "type-graphql";
+import { BaseEntity, Column, Entity,  ObjectIdColumn } from "typeorm";
 
 @Entity()
-export class Exercise {
-    @PrimaryGeneratedColumn()
-    id: number
+@ObjectType()
+export class Exercise extends BaseEntity {
 
+    @Field()
+    @ObjectIdColumn()
+    _id: string
+
+    @Field()
     @Column()
     question: string
 
-    @OneToMany(() => Option, option => option.exercise)
-    options: Option[]
+    @Field(()=>[String])
+    @Column()
+    options: String[]
+
+    @Field(()=>Int)
+    @Column()
+    correctOption:number
 }

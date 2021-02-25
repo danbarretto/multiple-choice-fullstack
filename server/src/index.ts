@@ -3,6 +3,7 @@ import { createConnection, getConnectionOptions } from "typeorm";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+import { ExerciseResolver } from "./resolvers/ExerciseResolver";
 
 (async () => {
   const app = express();
@@ -14,7 +15,7 @@ import { buildSchema } from "type-graphql";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [],
+      resolvers: [ExerciseResolver],
       validate: true
     }),
     context: ({ req, res }) => ({ req, res })
@@ -23,8 +24,10 @@ import { buildSchema } from "type-graphql";
   apolloServer.applyMiddleware({ app, cors: false });
   const port = process.env.PORT || 4000;
 
-  
+
   app.listen(port, () => {
     console.log(`server started at http://localhost:${port}/graphql`);
   });
-})();
+})().catch(err=>{
+  console.error(err)
+});

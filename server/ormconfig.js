@@ -1,30 +1,36 @@
 module.exports = [
   {
     name: "development",
-    type: "sqlite",
-    database: "database.sqlite",
+    type: "mongodb",
+    host:"localhost",
+    port:27017,
+    useUnifiedTopology:true,
+    database:"multiple-choice",
     synchronize: true,
     logging: true,
-    entities: ["src/entity/**/*.ts"],
+    entities: ["src/entities/**/*.ts"],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     cli: {
-      entitiesDir: "src/entity",
+      entitiesDir: "src/entities",
       migrationsDir: "src/migration",
       subscribersDir: "src/subscriber"
     }
   },
   {
     name: "production",
-    type: "postgres",
+    type: "mongodb",
+    host:"localhost",
+    port:27017,
+    database:"multiple-choice",
     url: process.env.DATABASE_URL,
     synchronize: true, // switch this to false once you have the initial tables created and use migrations instead
     logging: false,
-    entities: ["dist/entity/**/*.js"],
+    entities: ["dist/entities/**/*.js"],
     migrations: ["dist/migration/**/*.js"],
     subscribers: ["dist/subscriber/**/*.js"],
     cli: {
-      entitiesDir: "dist/entity",
+      entitiesDir: "dist/entities",
       migrationsDir: "dist/migration",
       subscribersDir: "dist/subscriber"
     }
