@@ -4,9 +4,6 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { ExerciseResolver } from "./resolvers/ExerciseResolver";
-import { printSchema } from "graphql";
-import  fs  from "fs";
-import path from 'path'
 
 (async () => {
   const app = express();
@@ -21,14 +18,17 @@ import path from 'path'
     validate: true
   })
 
-  fs.writeFileSync(path.join(__dirname, '/schema/schema.graphql'), printSchema(schema))
+  const corsOptions = {
+    origin: "http://localhost:3000",
+    credentials: true
+  };
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req, res }) => ({ req, res })
+    context: ({ req, res }) => ({ req, res }),
   });
 
-  apolloServer.applyMiddleware({ app, cors: false });
+  apolloServer.applyMiddleware({ app, cors: corsOptions });
   const port = process.env.PORT || 4000;
 
 

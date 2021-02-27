@@ -2,9 +2,10 @@ import {gql} from '@apollo/client'
 
 export const LoadExercises = gql`
     query{
-        exercises{
+        LoadExercises{
+            _id,
             question,
-              options,
+            options,
             correctOption
           }
     }

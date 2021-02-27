@@ -42,7 +42,7 @@ export class ExerciseResolver {
 
     @Mutation(() => Exercise)
     async updateExercise(
-        @Arg('id') _id: string,
+        @Arg('_id') _id: string,
         @Arg('input') input: ExerciseUpdateInput) {
 
         const exerciseRepo = getMongoRepository(Exercise)
@@ -65,7 +65,7 @@ export class ExerciseResolver {
     }
 
     @Mutation(() => Boolean)
-    async deleteExercise(@Arg('id') _id: string) {
+    async deleteExercise(@Arg('_id') _id: string) {
         const exerciseRepo = getMongoRepository(Exercise)
         try {
             await exerciseRepo.findOneAndDelete({ _id: new ObjectId(_id) })
@@ -77,8 +77,7 @@ export class ExerciseResolver {
     }
 
     @Query(() => [Exercise])
-    exercises() {
-
-        return Exercise.find()
+    LoadExercises() {
+            return Exercise.find()
     }
 }

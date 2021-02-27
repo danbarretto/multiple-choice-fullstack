@@ -59,7 +59,7 @@ export const QuestionEdit: React.FC<Props> = ({
   correctOption,
   options,
   finishEditng,
-  deleteQuestion,
+  deleteQuestion
 }) => {
   const classes = useStyles()
   const [newQuestion, setNewQuestion] = useState(question)
@@ -120,6 +120,7 @@ export const QuestionEdit: React.FC<Props> = ({
     newValues.push('')
     setValues(newValues)
   }
+
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMore />}>

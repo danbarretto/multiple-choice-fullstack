@@ -2,9 +2,9 @@ import { createStyles, Fab, makeStyles, Theme } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { QuestionItem } from './QuestionItem'
 import AddIcon from '@material-ui/icons/Add'
-import {useQuery, gql} from '@apollo/client'
-import {LoadExercises} from '../../graphql/Queries'
-import console from 'console'
+import { useQuery, gql, useMutation } from '@apollo/client'
+import { LoadExercises } from '../../graphql/Queries'
+import { DeleteExercise } from '../../graphql/Mutations'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,29 +28,38 @@ interface Question {
   question: string
   options: string[]
   correctOption: number
+  _id: string
 }
 
 export const QuestionList: React.FC = () => {
   const classes = useStyles()
 
-  const {error, loading, data} = useQuery(LoadExercises)
+  const { error, loading, data } = useQuery(LoadExercises)
+  const [questions, setQuestions] = useState<Question[]>([])
 
-  useEffect(()=>{
-    console.log(data)
+  useEffect(() => {
+    if (data)
+      setQuestions(
+        data.LoadExercises.map((ex: Question) => {
+          const newQuestion: Question = {
+            options: ex.options,
+            question: ex.question,
+            correctOption: ex.correctOption,
+            _id: ex._id,
+          }
+          return newQuestion
+        })
+      )
   }, [data])
 
-  const [questions, setQuestions] = useState<Question[]>([
-    { question: 'Responda A', correctOption: 0, options: ['A', 'B', 'C', 'D'] },
-    { question: 'Responda B', correctOption: 1, options: ['A', 'B', 'C', 'D'] },
-    { question: 'Responda C', correctOption: 2, options: ['A', 'B', 'C', 'D'] },
-  ])
   const [newQuestionIndex, setNewQuestionIndex] = useState(-1)
 
   const createQuestion = () => {
     const newQuestion: Question = {
       question: '',
       correctOption: 0,
-      options: [],
+      options: [''],
+      _id: '',
     }
     const newQuestions = [...questions]
     const newLength = newQuestions.push(newQuestion)
@@ -58,7 +67,19 @@ export const QuestionList: React.FC = () => {
     setNewQuestionIndex(newLength - 1)
   }
 
+  const [deleteExercise, deleteError] = useMutation(DeleteExercise)
+
   const deleteQuestion = (index: number) => {
+    if (deleteError.error) {
+      console.error(deleteError.error)
+    }
+    deleteExercise({
+      variables: {
+        _id:questions[index]._id,
+      },
+    }).catch(err=>{
+      console.error(err)
+    })
     setQuestions(questions.filter((q, qIndex) => index !== qIndex))
   }
 
@@ -66,7 +87,8 @@ export const QuestionList: React.FC = () => {
     <div className={classes.root}>
       {questions.map((q, index: number) => (
         <QuestionItem
-          key={`qItem${q.question}${index}`}
+          key={`qItem${q._id}`}
+          _id={q._id}
           question={q.question}
           options={q.options}
           correctOption={q.correctOption}
