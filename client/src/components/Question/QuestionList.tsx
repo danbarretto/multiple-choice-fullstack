@@ -55,14 +55,14 @@ export const QuestionList: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      {questions.map((q, index:number) => (
+      {questions.map((q, index: number) => (
         <QuestionItem
           key={`qItem${q.question}${index}`}
           question={q.question}
           options={q.options}
           correctOption={q.correctOption}
           deleteQuestion={() => deleteQuestion(index)}
-          initialMode={index===newQuestionIndex ? 'edit' : 'view'}
+          initialMode={index === newQuestionIndex ? 'edit' : 'view'}
         />
       ))}
       <Fab

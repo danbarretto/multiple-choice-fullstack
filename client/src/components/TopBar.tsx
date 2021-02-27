@@ -1,15 +1,12 @@
 import React from 'react'
 import {
   AppBar,
-  createStyles,
-  makeStyles,
-  Theme,
   Toolbar,
   Typography,
 } from '@material-ui/core'
 
 
-const useStyles = makeStyles((theme: Theme) =>
+/*const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -18,9 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },  
   })
-)
+)*/
 export const TopBar: React.FC = () => {
-  const classes = useStyles()
+  //const classes = useStyles()
 
   return (
     <div>
