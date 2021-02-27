@@ -141,9 +141,10 @@ export const QuestionEdit: React.FC<Props> = ({
             <IconButton
               className={classes.doneButton}
               size='medium'
-              onClick={() =>
+              onClick={(e) => {
+                e.stopPropagation()
                 finishEditng(newQuestion, newCorrectOption, values)
-              }
+              }}
             >
               <DoneIcon />
             </IconButton>

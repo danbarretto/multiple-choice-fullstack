@@ -23,6 +23,7 @@ interface Props {
   question: string
   options: string[]
   correctOption: number
+  initialMode?:string
   deleteQuestion: ()=>void
 }
 
@@ -33,19 +34,11 @@ export const QuestionItem: React.FC<Props> = (props) => {
   const [question, setQuestion] = useState(props.question)
   const [correctOption, setCorrectOption] = useState(props.correctOption)
   const [options, setOptions] = useState(props.options)
-
+  const [initialMode, setInitialMode] = useState(props.initialMode)
 
   return (
     <div className={classes.container}>
-      {mode === 'view' ? (
-        <QuestionView
-          correctOption={correctOption}
-          options={options}
-          question={question}
-          setMode={setMode}
-          deleteQuestion={props.deleteQuestion}
-        />
-      ) : (
+      {((initialMode && initialMode === 'edit')) || mode === 'edit'  ? (
         <QuestionEdit
           question={question}
           correctOption={correctOption}
@@ -56,7 +49,16 @@ export const QuestionItem: React.FC<Props> = (props) => {
             setCorrectOption(newCorrectOption)
             setOptions(newOptions)
             setMode('view')
+            setInitialMode(undefined)
           }}
+        />
+        ) : (
+        <QuestionView
+          correctOption={correctOption}
+          options={options}
+          question={question}
+          setMode={setMode}
+          deleteQuestion={props.deleteQuestion}
         />
       )}
     </div>
