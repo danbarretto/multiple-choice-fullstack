@@ -116,7 +116,7 @@ export const QuestionItem: React.FC<Props> = (props) => {
           question={question}
           correctOption={correctOption}
           options={options}
-          deleteQuestion={props.deleteQuestion}
+          cancelEdit={()=>setMode('view')}
           finishEditng={finishEditing}
         />
       ) : (

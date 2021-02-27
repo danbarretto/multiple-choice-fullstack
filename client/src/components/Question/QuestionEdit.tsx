@@ -14,8 +14,7 @@ import {
   TextField,
   Theme,
 } from '@material-ui/core'
-import { ExpandMore } from '@material-ui/icons'
-import Delete from '@material-ui/icons/Delete'
+import { Clear, ExpandMore } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { green } from '@material-ui/core/colors'
 import DoneIcon from '@material-ui/icons/Done'
@@ -26,7 +25,7 @@ interface Props {
   question: string
   correctOption: number
   options: string[]
-  deleteQuestion: () => void
+  cancelEdit: () => void
   finishEditng: (
     qustion: string,
     newCorrectOption: number,
@@ -59,7 +58,7 @@ export const QuestionEdit: React.FC<Props> = ({
   correctOption,
   options,
   finishEditng,
-  deleteQuestion
+  cancelEdit,
 }) => {
   const classes = useStyles()
   const [newQuestion, setNewQuestion] = useState(question)
@@ -150,12 +149,13 @@ export const QuestionEdit: React.FC<Props> = ({
               <DoneIcon />
             </IconButton>
             <IconButton
+              size='medium'
               onClick={(event) => {
                 event.stopPropagation()
-                deleteQuestion()
+                cancelEdit()
               }}
             >
-              <Delete />
+              <Clear />
             </IconButton>
           </div>
         </Grid>
