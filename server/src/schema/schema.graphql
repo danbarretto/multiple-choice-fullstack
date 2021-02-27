@@ -1,0 +1,28 @@
+type Exercise {
+  _id: String!
+  question: String!
+  options: [String!]!
+  correctOption: Int!
+}
+
+input ExerciseInput {
+  question: String!
+  correctOption: Int!
+  options: [String!]!
+}
+
+input ExerciseUpdateInput {
+  question: String
+  options: [String!]
+  correctOption: Int
+}
+
+type Mutation {
+  createExercise(input: ExerciseInput!): Exercise!
+  updateExercise(input: ExerciseUpdateInput!, id: String!): Exercise!
+  deleteExercise(id: String!): Boolean!
+}
+
+type Query {
+  exercises: [Exercise!]!
+}

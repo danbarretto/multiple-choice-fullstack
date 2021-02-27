@@ -44,32 +44,25 @@ export const QuestionList: React.FC = () => {
       options: [],
     }
     const newQuestions = [...questions]
-    newQuestions.push(newQuestion)
+    const newLength = newQuestions.push(newQuestion)
     setQuestions(newQuestions)
-    setNewQuestionIndex(questions.length)
+    setNewQuestionIndex(newLength - 1)
   }
 
   const deleteQuestion = (index: number) => {
     setQuestions(questions.filter((q, qIndex) => index !== qIndex))
   }
 
-  const setInitialMode = (index: number) => {
-    if(index === newQuestionIndex){
-      //setNewQuestionIndex(-1)
-      return 'edit'
-    }
-    return 'view'
-  }
   return (
     <div className={classes.root}>
-      {questions.map((q, index) => (
+      {questions.map((q, index:number) => (
         <QuestionItem
           key={`qItem${q.question}${index}`}
           question={q.question}
           options={q.options}
           correctOption={q.correctOption}
           deleteQuestion={() => deleteQuestion(index)}
-          initialMode={setInitialMode(index)}
+          initialMode={index===newQuestionIndex ? 'edit' : 'view'}
         />
       ))}
       <Fab

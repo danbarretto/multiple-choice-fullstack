@@ -4,6 +4,9 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { ExerciseResolver } from "./resolvers/ExerciseResolver";
+import { printSchema } from "graphql";
+import  fs  from "fs";
+import path from 'path'
 
 (async () => {
   const app = express();
@@ -13,11 +16,15 @@ import { ExerciseResolver } from "./resolvers/ExerciseResolver";
   );
   await createConnection({ ...options, name: "default" });
 
+  const schema = await buildSchema({
+    resolvers: [ExerciseResolver],
+    validate: true
+  })
+
+  fs.writeFileSync(path.join(__dirname, '/schema/schema.graphql'), printSchema(schema))
+
   const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [ExerciseResolver],
-      validate: true
-    }),
+    schema,
     context: ({ req, res }) => ({ req, res })
   });
 
@@ -28,6 +35,6 @@ import { ExerciseResolver } from "./resolvers/ExerciseResolver";
   app.listen(port, () => {
     console.log(`server started at http://localhost:${port}/graphql`);
   });
-})().catch(err=>{
+})().catch(err => {
   console.error(err)
 });
