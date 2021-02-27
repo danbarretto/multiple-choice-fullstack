@@ -1,7 +1,10 @@
 import { createStyles, Fab, makeStyles, Theme } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { QuestionItem } from './QuestionItem'
 import AddIcon from '@material-ui/icons/Add'
+import {useQuery, gql} from '@apollo/client'
+import {LoadExercises} from '../../graphql/Queries'
+import console from 'console'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +32,12 @@ interface Question {
 
 export const QuestionList: React.FC = () => {
   const classes = useStyles()
+
+  const {error, loading, data} = useQuery(LoadExercises)
+
+  useEffect(()=>{
+    console.log(data)
+  }, [data])
 
   const [questions, setQuestions] = useState<Question[]>([
     { question: 'Responda A', correctOption: 0, options: ['A', 'B', 'C', 'D'] },
