@@ -24,14 +24,16 @@ interface Props {
   options: string[]
   correctOption: number
   setMode: (mode: string) => void
+  deleteQuestion: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     heading: {
       fontSize: theme.typography.pxToRem(20),
-      flexBasis: '90%',
-      flexShrink: 0,
+      //width:'80%',
+      //flexBasis: '50%',
+      //flexShrink: 0,
     },
     button: {
       alignSelf: 'center',
@@ -47,6 +49,7 @@ export const QuestionView: React.FC<Props> = ({
   options,
   correctOption,
   setMode,
+  deleteQuestion,
 }) => {
   const [selectedOp, setSelectctedOp] = useState(0)
   const classes = useStyles()
@@ -73,15 +76,28 @@ export const QuestionView: React.FC<Props> = ({
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <Typography className={classes.heading}>{question}</Typography>
+        <Grid
+          container
+          direction='row'
+          justify='space-between'
+          alignItems='center'
+        >
+          <Typography className={classes.heading}>{question}</Typography>
+          <div>
+            <IconButton onClick={() => setMode('edit')}>
+              <Edit />
+            </IconButton>
 
-        <IconButton onClick={() => setMode('edit')}>
-          <Edit />
-        </IconButton>
-
-        <IconButton onClick={(event) => event.stopPropagation()}>
-          <Delete />
-        </IconButton>
+            <IconButton
+              onClick={(event) => {
+                event.stopPropagation()
+                deleteQuestion()
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid

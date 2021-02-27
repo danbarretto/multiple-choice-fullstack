@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { QuestionItem } from './QuestionItem'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -15,27 +15,36 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
+interface Question {
+  question: string
+  options: string[]
+  correctOption: number
+}
+
 export const QuestionList: React.FC = () => {
   const classes = useStyles()
 
+  const [questions, setQuestions] = useState<Question[]>([
+    { question: 'Responda A', correctOption: 0, options: ['A', 'B', 'C', 'D'] },
+    { question: 'Responda B', correctOption: 1, options: ['A', 'B', 'C', 'D'] },
+    { question: 'Responda C', correctOption: 2, options: ['A', 'B', 'C', 'D'] },
+  ])
+
+  const deleteQuestion = (index:number) =>{
+    setQuestions(questions.filter((q,qIndex)=>index!== qIndex))
+  }
 
   return (
     <div className={classes.root}>
-      <QuestionItem
-        question='Responda A'
-        options={['A', 'B', 'C', 'D']}
-        correctOption={0}
-      />
-      <QuestionItem
-        question='Responda B'
-        options={['A', 'B', 'C', 'D']}
-        correctOption={1}
-      />
-      <QuestionItem
-        question='Responda C'
-        options={['A', 'B', 'C', 'D']}
-        correctOption={2}
-      />
+      {questions.map((q, index) => (
+        <QuestionItem
+          key={`qItem${q.question}${index}`}
+          question={q.question}
+          options={q.options}
+          correctOption={q.correctOption}
+          deleteQuestion={()=>deleteQuestion(index)}
+        />
+      ))}
     </div>
   )
 }

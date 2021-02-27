@@ -23,6 +23,7 @@ interface Props {
   question: string
   options: string[]
   correctOption: number
+  deleteQuestion: ()=>void
 }
 
 export const QuestionItem: React.FC<Props> = (props) => {
@@ -42,12 +43,14 @@ export const QuestionItem: React.FC<Props> = (props) => {
           options={options}
           question={question}
           setMode={setMode}
+          deleteQuestion={props.deleteQuestion}
         />
       ) : (
         <QuestionEdit
           question={question}
           correctOption={correctOption}
           options={options}
+          deleteQuestion={props.deleteQuestion}
           finishEditng={(newQuestion, newCorrectOption, newOptions)=>{
             setQuestion(newQuestion)
             setCorrectOption(newCorrectOption)

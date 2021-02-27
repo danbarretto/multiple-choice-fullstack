@@ -10,6 +10,7 @@ import {
   makeStyles,
   Radio,
   RadioGroup,
+  TextareaAutosize,
   TextField,
   Theme,
 } from '@material-ui/core'
@@ -19,11 +20,13 @@ import React, { useState } from 'react'
 import { green } from '@material-ui/core/colors'
 import DoneIcon from '@material-ui/icons/Done'
 import DeleteIcon from '@material-ui/icons/Delete'
+import AddIcon from '@material-ui/icons/Add'
 
 interface Props {
   question: string
   correctOption: number
   options: string[]
+  deleteQuestion: () => void
   finishEditng: (
     qustion: string,
     newCorrectOption: number,
@@ -37,14 +40,16 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       bottom: theme.spacing(2),
       right: theme.spacing(2),
+    },
+    trashFab: {
+      marginLeft: '1em',
+    },
+    doneButton: {
       color: theme.palette.common.white,
       backgroundColor: green[500],
       '&:hover': {
         backgroundColor: green[600],
       },
-    },
-    trashFab: {
-      marginLeft: '1em',
     },
   })
 )
@@ -54,6 +59,7 @@ export const QuestionEdit: React.FC<Props> = ({
   correctOption,
   options,
   finishEditng,
+  deleteQuestion,
 }) => {
   const classes = useStyles()
   const [newQuestion, setNewQuestion] = useState(question)
@@ -77,12 +83,18 @@ export const QuestionEdit: React.FC<Props> = ({
         value={index}
         style={{ marginTop: '.5em' }}
         label={
-          <div>
-            <TextField
+          <Grid
+            container
+            direction='row'
+            justify='flex-start'
+            alignItems='center'
+          >
+            <TextareaAutosize
               //key={`txt${index}${question}`}
-              label='Nova opção'
+              //label='Nova opção'
               value={values[index]}
-              multiline
+              //multiline
+
               onChange={(e) => {
                 const newValues = [...values]
                 newValues[index] = e.target.value
@@ -96,15 +108,12 @@ export const QuestionEdit: React.FC<Props> = ({
             >
               <DeleteIcon />
             </Fab>
-          </div>
+          </Grid>
         }
         control={<Radio key={`radio${question}${index}`} color='primary' />}
       />
     )
   }
-  /*const [radioBtns, setRadioBtns] = useState(
-    values.map((op, index) => createRadioBtn(index))
-  )*/
 
   const addOptions = () => {
     const newValues = [...values]
@@ -114,16 +123,40 @@ export const QuestionEdit: React.FC<Props> = ({
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMore />}>
-        <TextField
-          label={'Novo enunciado'}
-          value={newQuestion}
-          multiline
-          onChange={(e) => setNewQuestion(e.target.value)}
-        ></TextField>
+        <Grid
+          container
+          direction='row'
+          justify='space-between'
+          alignItems='center'
+        >
+          <TextField
+            label={'Novo enunciado'}
+            value={newQuestion}
+            multiline
+            style={{ width: '50%' }}
+            onChange={(e) => setNewQuestion(e.target.value)}
+          ></TextField>
 
-        <IconButton onClick={(event) => event.stopPropagation()}>
-          <Delete />
-        </IconButton>
+          <div>
+            <IconButton
+              className={classes.doneButton}
+              size='medium'
+              onClick={() =>
+                finishEditng(newQuestion, newCorrectOption, values)
+              }
+            >
+              <DoneIcon />
+            </IconButton>
+            <IconButton
+              onClick={(event) => {
+                event.stopPropagation()
+                deleteQuestion()
+              }}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <RadioGroup
@@ -133,13 +166,14 @@ export const QuestionEdit: React.FC<Props> = ({
         >
           {values.map((op, index) => createRadioBtn(index))}
         </RadioGroup>
+
         <Fab
-          color='secondary'
+          size='medium'
           className={classes.fab}
-          //onClick={() => finishEditng(newQuestion, newCorrectOption, values)}
+          color='primary'
           onClick={() => addOptions()}
         >
-          <DoneIcon />
+          <AddIcon />
         </Fab>
       </AccordionDetails>
     </Accordion>
