@@ -25,7 +25,9 @@ interface Props {
   question: string
   correctOption: number
   options: string[]
+  isNewQuestion:boolean
   cancelEdit: () => void
+  deleteQuestion: () => void
   finishEditng: (
     qustion: string,
     newCorrectOption: number,
@@ -59,6 +61,8 @@ export const QuestionEdit: React.FC<Props> = ({
   options,
   finishEditng,
   cancelEdit,
+  isNewQuestion,
+  deleteQuestion
 }) => {
   const classes = useStyles()
   const [newQuestion, setNewQuestion] = useState(question)
@@ -152,6 +156,10 @@ export const QuestionEdit: React.FC<Props> = ({
               size='medium'
               onClick={(event) => {
                 event.stopPropagation()
+                if(isNewQuestion){
+                  deleteQuestion()
+                  return
+                }
                 cancelEdit()
               }}
             >

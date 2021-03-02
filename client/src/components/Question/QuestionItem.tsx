@@ -118,6 +118,8 @@ export const QuestionItem: React.FC<Props> = (props) => {
           options={options}
           cancelEdit={()=>setMode('view')}
           finishEditng={finishEditing}
+          deleteQuestion={props.deleteQuestion}
+          isNewQuestion={initialMode === 'edit'}
         />
       ) : (
         <QuestionView
