@@ -1,8 +1,18 @@
-import { createStyles, Fab, makeStyles, Theme } from '@material-ui/core'
+import {
+  Button,
+  createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  makeStyles,
+  Theme,
+} from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { QuestionItem } from './QuestionItem'
 import AddIcon from '@material-ui/icons/Add'
-import { useQuery, gql, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { LoadExercises } from '../../graphql/Queries'
 import { DeleteExercise } from '../../graphql/Mutations'
 
@@ -34,9 +44,9 @@ interface Question {
 export const QuestionList: React.FC = () => {
   const classes = useStyles()
 
-  const { error, loading, data } = useQuery(LoadExercises)
+  const { error, data } = useQuery(LoadExercises)
+  const [openDialog, setOpenDialog] = useState(false)
   const [questions, setQuestions] = useState<Question[]>([])
-
   useEffect(() => {
     if (data)
       setQuestions(
@@ -50,7 +60,8 @@ export const QuestionList: React.FC = () => {
           return newQuestion
         })
       )
-  }, [data])
+    setOpenDialog(error?.message !== undefined)
+  }, [data,error?.message])
 
   const [newQuestionIndex, setNewQuestionIndex] = useState(-1)
 
@@ -75,9 +86,9 @@ export const QuestionList: React.FC = () => {
     }
     deleteExercise({
       variables: {
-        _id:questions[index]._id,
+        _id: questions[index]._id,
       },
-    }).catch(err=>{
+    }).catch((err) => {
       console.error(err)
     })
     setQuestions(questions.filter((q, qIndex) => index !== qIndex))
@@ -103,6 +114,13 @@ export const QuestionList: React.FC = () => {
       >
         <AddIcon />
       </Fab>
+      <Dialog open={openDialog}>
+        <DialogTitle>Erro!</DialogTitle>
+        <DialogContent>{error?.message}</DialogContent>
+        <DialogActions>
+          <Button>Ok</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

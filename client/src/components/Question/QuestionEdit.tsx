@@ -136,7 +136,7 @@ export const QuestionEdit: React.FC<Props> = ({
     if (!newQuestion || newQuestion === '') {
       errs.push('Enunciado não pode estar vazio!')
     }
-    values.map((option, index) => {
+    values.forEach((option, index) => {
       if (!option || option === '') {
         errs.push(`Opção ${index + 1} não pode estar vazia!`)
       }

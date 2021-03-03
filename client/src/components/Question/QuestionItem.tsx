@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core'
+import { createStyles, Dialog, DialogContent, DialogTitle, makeStyles, Theme } from '@material-ui/core'
 import React, { useState } from 'react'
 import { QuestionView } from './QuestionView'
 import { QuestionEdit } from './QuestionEdit'
@@ -130,6 +130,13 @@ export const QuestionItem: React.FC<Props> = (props) => {
           deleteQuestion={props.deleteQuestion}
         />
       )}
+      <Dialog open={createError.error !== undefined || updateError.error !== undefined}>
+        <DialogTitle>Erro!</DialogTitle>
+        <DialogContent>
+          {createError?.error}
+          {updateError?.error}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
