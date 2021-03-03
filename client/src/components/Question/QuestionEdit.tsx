@@ -2,7 +2,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Fab,
   FormControlLabel,
   Grid,
@@ -25,7 +31,7 @@ interface Props {
   question: string
   correctOption: number
   options: string[]
-  isNewQuestion:boolean
+  isNewQuestion: boolean
   cancelEdit: () => void
   deleteQuestion: () => void
   finishEditng: (
@@ -62,12 +68,13 @@ export const QuestionEdit: React.FC<Props> = ({
   finishEditng,
   cancelEdit,
   isNewQuestion,
-  deleteQuestion
+  deleteQuestion,
 }) => {
   const classes = useStyles()
   const [newQuestion, setNewQuestion] = useState(question)
   const [newCorrectOption, setNewCorrectOption] = useState(correctOption)
   const [values, setValues] = useState(options)
+  const [errors, setErrors] = useState<string[]>([])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCorrectOption(
@@ -124,6 +131,22 @@ export const QuestionEdit: React.FC<Props> = ({
     setValues(newValues)
   }
 
+  const validateFields = () => {
+    const errs: string[] = []
+    if (!newQuestion || newQuestion === '') {
+      errs.push('Enunciado não pode estar vazio!')
+    }
+    values.map((option, index) => {
+      if (!option || option === '') {
+        errs.push(`Opção ${index + 1} não pode estar vazia!`)
+      }
+    })
+    if(values.length === 1) errs.push('Deve haver mais de 1 opção!')
+
+    setErrors(errs)
+    if (errs.length === 0) finishEditng(newQuestion, newCorrectOption, values)
+  }
+
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMore />}>
@@ -147,7 +170,7 @@ export const QuestionEdit: React.FC<Props> = ({
               size='medium'
               onClick={(e) => {
                 e.stopPropagation()
-                finishEditng(newQuestion, newCorrectOption, values)
+                validateFields()
               }}
             >
               <DoneIcon />
@@ -156,7 +179,7 @@ export const QuestionEdit: React.FC<Props> = ({
               size='medium'
               onClick={(event) => {
                 event.stopPropagation()
-                if(isNewQuestion){
+                if (isNewQuestion) {
                   deleteQuestion()
                   return
                 }
@@ -185,6 +208,25 @@ export const QuestionEdit: React.FC<Props> = ({
         >
           <AddIcon />
         </Fab>
+        {errors.length > 0 && (
+          <Dialog open={errors.length > 0}>
+            <DialogTitle>Erro!</DialogTitle>
+            <DialogContent>
+              {errors.map((err) => (
+                <DialogContentText key={err}>{`${err}\n`}</DialogContentText>
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setErrors([])
+                }}
+              >
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </AccordionDetails>
     </Accordion>
   )
