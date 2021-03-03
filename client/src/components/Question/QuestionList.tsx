@@ -109,7 +109,7 @@ export const QuestionList: React.FC = () => {
       ))}
       <Fab
         className={classes.fab}
-        color='secondary'
+        color='primary'
         onClick={() => createQuestion()}
       >
         <AddIcon />

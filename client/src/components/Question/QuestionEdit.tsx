@@ -203,7 +203,7 @@ export const QuestionEdit: React.FC<Props> = ({
         <Fab
           size='medium'
           className={classes.fab}
-          color='primary'
+          color='secondary'
           onClick={() => addOptions()}
         >
           <AddIcon />
